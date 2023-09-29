@@ -1,5 +1,5 @@
 $fa = 1;
-$fs = 0.01;
+$fs = 0.1;
 
 t = 0.005;
 w = 0.4;
@@ -20,7 +20,7 @@ mtunnelx = 1.5;
 mtunnely = 0.2;
 mtunnelOffset = 0.1;
 
-module MotorNegSpace() {
+module Motor() {
     cube([mx, my, mz], center = true);
     translate([0, -(mfinOffset - my/2 + mfiny/2), 0])
         cube([mfinx, mfiny, mz], center = true);
@@ -31,31 +31,43 @@ module MotorNegSpace() {
         cube([mtunnelx, mtunnely, mz], center = true);
 }
 //BREADBOARD
+bbx = 0;
+bby = 0;
+bbz = 0;
 
 //BATTERY
 bx = 0;
 by = 1;
 bz = 0;
+//cable tunnel
+btx = 0;
+bty = 0;
+btz = 0;
 
-module BatteryNegSpace() {
-}
-//SENSOR
-
-//BALL BEARING
+//BALL BEARING HOUSING
 
 //WHEEL
+wy = 0;
+wCircum = 0;
 
 //ASSEMBLY
+//shell
+//axel
 ax = mfinx + w;
 ay = by + w + my*2 + w;
 az = mz + w/2 - t;
 
-difference() {
+module Axel() {
+    difference() {
     cube([ax, ay, az], center = true);
     translate([0, -(ay/2 - my/2 + t), (az/2 - mz/2 + t)])
-        MotorNegSpace();
+        Motor();
     translate([0, (ay/2 - my/2 + t), (az/2 - mz/2 + t)])
         rotate([180, 0, 0])
-        MotorNegSpace();
-
+        Motor();
+    }
 }
+//bearing mount
+//bread clip
+
+Axel();

@@ -55,7 +55,7 @@ wCircum = 0;
 //axel
 ax = mfinx + w;
 ay = by + w + my*2 + w;
-az = mz + w/2 - t;
+az = mz + w/2;
 
 module Axel() {
     difference() {

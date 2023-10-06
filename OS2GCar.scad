@@ -46,11 +46,11 @@ bz = 0.779 + t;
 //cable tunnel
 btx = bx + 1;
 bty = 0.6;
-btz = 0.6;
+btz = bty + (bz - bty)/2;
 
 module Battery() {
     cube([bx, by, bz], center = true);
-    translate([(btx/2 - bx/2), 0, 0])
+    translate([(btx/2 - bx/2), 0, (bz - bty)/4])
         cube([btx, bty, btz], center = true);
 }
 //BALL BEARING HOUSING
@@ -80,8 +80,22 @@ module Axel() {
         Motor();
     }
 }
-//shell
-//bearing mount
 //bread clip
+//shell
+sx = bx + w;
+sy = by + w;
+sz = bz + w/2;
 
-Axel();
+module Shell() {
+    difference() {
+    union() {
+    Axel();
+    translate([0, 0, (-sz/2 + mz/2)])
+        cube([sx, sy, sz], center = true);
+    }
+    translate([0, 0, (-bz/2 + mz/2 + c)])
+        Battery();
+    }
+}
+
+Shell();

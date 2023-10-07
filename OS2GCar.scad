@@ -31,14 +31,22 @@ module Motor() {
     translate([(mtunnelx/2 - mx/2), -(-my/2 + mtunnely/2 + mtunnelOffset), 0])
         cube([mtunnelx, mtunnely, mz], center = true);
 }
-//BREADBOARD
-bbx = 0;
-bby = 0;
-bbz = 0;
+
+//TODO: BREADBOARD
+bbx = 3.4;
+bby = 2.2;
+bbz = 0.4;
+//breadboard wire tunnel
+bbtx = bbx - w;
+bbty = bby - w;
+bbtz = bbz*2;
 
 module Breadboard() {
     cube([bbx, bby, bbz], center = true);
+    translate([0, 0, (bbtz/2 - bbz/2)])
+        cube([bbtx, bbty, bbtz], center = true);
 }
+
 //BATTERY
 bx = 3.790 + t;
 by = 0.979 + t;
@@ -53,6 +61,7 @@ module Battery() {
     translate([(btx/2 - bx/2), 0, (bz - bty)/4])
         cube([btx, bty, btz], center = true);
 }
+
 //BALL BEARING HOUSING
 
 //WHEEL
@@ -63,10 +72,14 @@ module Wheel() {
     rotate([90, 0, 0])
         cylinder(h = wy, r = wCircum/2, center = true);
 }
+
 //ASSEMBLY
 //axel
+yminOfBreadboard = bby + w;
+yminOfBattery = by + w + my*2 + w;
+
 ax = mfinx + w;
-ay = by + w + my*2 + w;
+ay = (yminOfBreadboard > yminOfBattery) ? yminOfBreadboard : yminOfBattery;
 az = mz + w/2;
 
 module Axel() {
@@ -80,7 +93,19 @@ module Axel() {
         Motor();
     }
 }
+
 //bread clip
+bcx = mx;
+bcy = bby + w;
+bcz = bbz + w;
+
+module Breadclip() {
+    difference() {
+        cube([bcx, bcy, bcz], center = true);
+        Breadboard();
+    }
+}
+
 //shell
 sx = bx + w;
 sy = by + w;

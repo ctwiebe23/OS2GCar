@@ -77,19 +77,23 @@ module Wheel() {
 //bread clip
 bcx = bbx + w/2;
 bcy = bby + w;
-bcz = bbz + w;
+bcz = bbz + w + mz;
 
 module Breadclip() {
     difference() {
     translate([(mx/2 - mz/2), 0, 0])
     difference() {
-        cube([bcx, bcy, bcz], center = true);
+        translate([0, 0, -mz/2])
+            cube([bcx, bcy, bcz], center = true);
         translate([(w/4 + c), 0, 0])
             Breadboard();
     }
-    cube([ax, (bcy + c), (bcz + c)], center = true);
-    translate([(mx/2 - mz/2), 0, 0])
-        cube([(bcx + c), by, (bcz + c)], center = true);
+    translate([0, 0, -mz/2])
+    union() {
+        cube([(ax-w), (bcy + c), (bcz + c)], center = true);
+        translate([(mx/2 - mz/2), 0, 0])
+            cube([(bcx + c), by, (bcz + c)], center = true);
+    }
     }
 }
 
@@ -106,7 +110,7 @@ module Axel() {
     difference() {
     union() {
         cube([ax, ay, az], center = true);
-        translate([0, 0, (mz/2 + bcz/2 - w/4 - c)])
+        translate([0, 0, (bcz/2 - w/4 - c)])
             Breadclip();
     }
     translate([0, -(ay/2 - my/2 + c), (az/2 - mz/2 + c)])
@@ -137,3 +141,7 @@ module Shell() {
 }
 
 Shell();
+translate([0, -(ay/2 + wy/2 + w/2), 0])
+    *Wheel();
+translate([0, (ay/2 + wy/2 + w/2), 0])
+    *Wheel();

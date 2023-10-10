@@ -1,6 +1,7 @@
 $fa = 1;
 $fs = 0.1;
 
+//clipping, tolerance, wall
 c = 0.001;
 t = 0.005;
 w = 0.4;
@@ -15,37 +16,20 @@ mfiny = 0.098 + t;
 mfinOffset = 0.665;
 //wheel mount
 mmounty = 0.171 + t;
-mmountCircum = mz;
+mmountd = mz;
 //wire tunnel
 mtunnelx = mx + 3;
 mtunnely = 0.2;
 mtunnelOffset = 0.1;
 
-module Motor() {
-    cube([mx, my, mz], center = true);
-    translate([0, -(mfinOffset - my/2 + mfiny/2), 0])
-        cube([mfinx, mfiny, mz], center = true);
-    translate([(mx/2 - mmountCircum/2), -(mmounty/2 + my/2 - c), 0])
-        rotate([90, 0, 0])
-        cylinder(h = mmounty, r = mmountCircum/2, center = true);
-    translate([(mtunnelx/2 - mx/2), -(-my/2 + mtunnely/2 + mtunnelOffset), 0])
-        cube([mtunnelx, mtunnely, mz], center = true);
-}
-
-//TODO: BREADBOARD
-bbx = 3.4;
-bby = 2.2;
-bbz = 0.4;
+//BREADBOARD
+bbx = 3.4;  //TODO: Measure
+bby = 2.2;  //TODO: Measure
+bbz = 0.4;  //TODO: Measure
 //breadboard wire tunnel
 bbtx = bbx - w/2;
 bbty = bby - w;
 bbtz = bbz*2;
-
-module Breadboard() {
-    cube([bbx, bby, bbz], center = true);
-    translate([w/4, 0, (bbtz/2 - bbz/2)])
-        cube([bbtx, bbty, bbtz], center = true);
-}
 
 //BATTERY
 bx = 3.790 + t;
@@ -56,28 +40,102 @@ btx = bx + 1;
 bty = 0.6;
 btz = bty + (bz - bty)/2;
 
-module Battery() {
-    cube([bx, by, bz], center = true);
-    translate([(btx/2 - bx/2), 0, (bz - bty)/4])
-        cube([btx, bty, btz], center = true);
-}
-
-//BALL BEARING HOUSING
-
 //WHEEL
 wy = 0.315;
-wCircum = 2.380;
+wd = 2.380;
 
-module Wheel() {
-    rotate([90, 0, 0])
-        cylinder(h = wy, r = wCircum/2, center = true);
-}
+//ORB HOUSING
+//actual orb
+oactuald = 0.5;  //TODO: Measure
+//negative orb
+otolerance = 0.02;
+od = oactuald + otolerance;
+//housing
+oshelld = od + w/2;
+oshellOpeningz = 2.75*oshelld/7;  //TODO: Check
+oshellOffsetz =  -oactuald/2 + wd/2 + mz/2 - bz + 2*c;
+odiskd = oshelld + w/2;
+odiskh = w/4;
+opillard = oshelld;
+opillarh = oshellOffsetz - oactuald/2 + c;
+ofinx = w/4;
+ofiny = oshelld;
+ofinz = od;
 
 //ASSEMBLY
 //bread clip
 bcx = bbx + w/2;
 bcy = bby + w;
 bcz = bbz + w + mz;
+//axel
+yminOfBreadboard = bby + w;
+yminOfBattery = by + w + my*2;
+ax = mfinx + w;
+ay = (yminOfBreadboard > yminOfBattery) ? yminOfBreadboard : yminOfBattery;
+az = mz + w/2;
+//shell
+sx = bx + w;
+sy = by + w;
+sz = bz + w/2;
+
+module Motor() {
+    cube([mx, my, mz], center = true);
+    translate([0, -(mfinOffset - my/2 + mfiny/2), 0])
+        cube([mfinx, mfiny, mz], center = true);
+    translate([(mx/2 - mmountd/2), -(mmounty/2 + my/2 - c), 0])
+        rotate([90, 0, 0])
+        cylinder(h = mmounty, r = mmountd/2, center = true);
+    translate([(mtunnelx/2 - mx/2), -(-my/2 + mtunnely/2 + mtunnelOffset), 0])
+        cube([mtunnelx, mtunnely, mz], center = true);
+}
+
+module Breadboard() {
+    cube([bbx, bby, bbz], center = true);
+    translate([w/4, 0, (bbtz/2 - bbz/2)])
+        cube([bbtx, bbty, bbtz], center = true);
+}
+
+module Battery() {
+    cube([bx, by, bz], center = true);
+    translate([(btx/2 - bx/2), 0, (bz - bty)/4])
+        cube([btx, bty, btz], center = true);
+}
+
+module Wheel() {
+    rotate([90, 0, 0])
+        cylinder(h = wy, r = wd/2, center = true);
+}
+
+module OrbFin() {
+        cube([ofinx, ofiny, ofinz], center = true);
+}
+
+module OrbShell() {
+    %sphere(d = oactuald);
+    translate([0, 0, (-od/2 + oactuald/2)])
+    difference() {
+        sphere(d = oshelld);
+        sphere(d = od);
+        translate([0, 0, (-oshelld/2 + oshellOpeningz/2)])
+            cube([oshelld, oshelld, oshellOpeningz], center = true);
+        OrbFin();
+        rotate([0, 0, 60])
+            OrbFin();
+        rotate([0, 0, 120])
+            OrbFin();
+    }
+    translate([0, 0, (-odiskh/2 + oshellOffsetz)])
+        cylinder(h = odiskh, r = odiskd/2, center = true);
+    translate([0, 0, (-opillarh/2 + oshellOffsetz)])
+        cylinder(h = opillarh, r = opillard/2, center = true);
+}
+
+module NegativeOrbShell() {
+    translate([0, 0, (-odiskh/2 + oshellOffsetz)])
+        cylinder(h = odiskh, r = odiskd/2, center = true);
+    translate([0, 0, (-oshelld/2 + oshellOffsetz)])
+        cylinder(h = oshelld, r = opillard/2, center = true);
+}
 
 module Breadclip() {
     difference() {
@@ -97,16 +155,8 @@ module Breadclip() {
     }
 }
 
-//axel
-yminOfBreadboard = bby + w;
-yminOfBattery = by + w + my*2;
-
-ax = mfinx + w;
-ay = (yminOfBreadboard > yminOfBattery) ? yminOfBreadboard : yminOfBattery;
-az = mz + w/2;
-
 module Axel() {
-    translate([(-mx/2 + mmountCircum/2), 0, (-az/2 + mz/2)])
+    translate([(-mx/2 + mmountd/2), 0, (-az/2 + mz/2)])
     difference() {
     union() {
         cube([ax, ay, az], center = true);
@@ -123,11 +173,6 @@ module Axel() {
 
 }
 
-//shell
-sx = bx + w;
-sy = by + w;
-sz = bz + w/2;
-
 module Shell() {
     difference() {
     union() {
@@ -137,11 +182,19 @@ module Shell() {
     }
     translate([0, 0, (-bz/2 + mz/2 + c)])
         Battery();
+    translate([(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
+        NegativeOrbShell();
+    translate([-(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
+        NegativeOrbShell();
     }
 }
 
 Shell();
-translate([0, -(ay/2 + wy/2 + w/2), 0])
-    *Wheel();
-translate([0, (ay/2 + wy/2 + w/2), 0])
-    *Wheel();
+translate([(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
+    %OrbShell();
+translate([-(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
+    %OrbShell();
+translate([0, -(ay/2 + wy/2), 0])
+    %Wheel();
+translate([0, (ay/2 + wy/2), 0])
+    %Wheel();

@@ -1,5 +1,5 @@
 $fa = 1;
-$fs = 0.1;
+$fs = 0.07;
 
 //clipping, tolerance, wall
 c = 0.001;
@@ -46,7 +46,7 @@ wd = 2.380;
 
 //ORB HOUSING
 //actual orb
-oactuald = 0.5;  //TODO: Measure
+oactuald = 0.4;  //TODO: Measure
 //negative orb
 otolerance = 0.02;
 od = oactuald + otolerance;
@@ -161,7 +161,7 @@ module Axel() {
     union() {
         cube([ax, ay, az], center = true);
         translate([0, 0, (bcz/2 - w/4 - c)])
-            Breadclip();
+            color("red") Breadclip();
     }
     translate([0, -(ay/2 - my/2 + c), (az/2 - mz/2 + c)])
         Motor();
@@ -189,12 +189,16 @@ module Shell() {
     }
 }
 
+module NotPrinted() {
+    translate([(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
+        OrbShell();
+    translate([-(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
+        OrbShell();
+    translate([0, -(ay/2 + wy/2), 0])
+        Wheel();
+    translate([0, (ay/2 + wy/2), 0])
+        Wheel();
+}
+
 Shell();
-translate([(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
-    %OrbShell();
-translate([-(bx/2 - odiskd/2 - w/2), 0, (-wd/2 + oactuald/2)])
-    %OrbShell();
-translate([0, -(ay/2 + wy/2), 0])
-    %Wheel();
-translate([0, (ay/2 + wy/2), 0])
-    %Wheel();
+%NotPrinted();

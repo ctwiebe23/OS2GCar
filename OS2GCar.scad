@@ -27,18 +27,18 @@ bbx = 3.4;  //TODO: Measure
 bby = 2.2;  //TODO: Measure
 bbz = 0.4;  //TODO: Measure
 //breadboard wire tunnel
-bbtx = bbx - w/2;
-bbty = bby - w;
-bbtz = bbz*2;
+bbtunnelx = bbx - w/2;
+bbtunnely = bby - w;
+bbtunnelz = bbz*2;
 
 //BATTERY
 bx = 3.790 + t;
 by = 0.979 + t;
 bz = 0.779 + t;
 //cable tunnel
-btx = bx + 1;
-bty = 0.6;
-btz = bty + (bz - bty)/2;
+btunnelx = bx + 1;
+btunnely = 0.6;
+btunnelz = btunnely + (bz - btunnely)/2;
 
 //WHEEL
 wy = 0.315;
@@ -91,14 +91,14 @@ module Motor() {
 
 module Breadboard() {
     cube([bbx, bby, bbz], center = true);
-    translate([w/4, 0, (bbtz/2 - bbz/2)])
-        cube([bbtx, bbty, bbtz], center = true);
+    translate([w/4, 0, (bbtunnelz/2 - bbz/2)])
+        cube([bbtunnelx, bbtunnely, bbtunnelz], center = true);
 }
 
 module Battery() {
     cube([bx, by, bz], center = true);
-    translate([(btx/2 - bx/2), 0, (bz - bty)/4])
-        cube([btx, bty, btz], center = true);
+    translate([(btunnelx/2 - bx/2), 0, (bz - btunnely)/4])
+        cube([btunnelx, btunnely, btunnelz], center = true);
 }
 
 module Wheel() {

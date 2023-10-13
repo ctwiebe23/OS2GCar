@@ -23,17 +23,17 @@ mtunnely = 0.2;
 mtunnelOffset = 0.1;
 
 //BREADBOARD
-bbx = 3.37;  //TODO: Measure
-bby = 2.16;  //TODO: Measure
-bbz = 0.38;  //TODO: Measure
+bbx = 3.313 + t;
+bby = 2.210 + t;
+bbz = 0.383 + t;
 //breadboard wire tunnel
 bbtunnelx = bbx - w/2;
 bbtunnely = bby - w;
 bbtunnelz = bbz*2;
 //expansion snaps
 bbsnapx = bbx;
-bbsnapy = bby + 0.05;  //TODO: Measure
-bbsnapz = 0.1;  //TODO: Measure
+bbsnapy = bby + 0.063;
+bbsnapz = 0.191 + t;
 
 //BATTERY
 bx = 3.790 + t;

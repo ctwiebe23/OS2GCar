@@ -17,19 +17,23 @@ mfinOffset = 0.665;
 //wheel mount
 mmounty = 0.171 + t;
 mmountd = mz;
-//wire tunnel
+// motor wire tunnel
 mtunnelx = mx + 3;
 mtunnely = 0.2;
 mtunnelOffset = 0.1;
 
 //BREADBOARD
-bbx = 3.4;  //TODO: Measure
-bby = 2.2;  //TODO: Measure
-bbz = 0.4;  //TODO: Measure
+bbx = 3.37;  //TODO: Measure
+bby = 2.16;  //TODO: Measure
+bbz = 0.38;  //TODO: Measure
 //breadboard wire tunnel
 bbtunnelx = bbx - w/2;
 bbtunnely = bby - w;
 bbtunnelz = bbz*2;
+//expansion snaps
+bbsnapx = bbx;
+bbsnapy = bby + 0.05;  //TODO: Measure
+bbsnapz = 0.1;  //TODO: Measure
 
 //BATTERY
 bx = 3.790 + t;
@@ -54,7 +58,7 @@ od = oactuald + otolerance;
 oshelld = od + w/2;
 oshellOpeningz = 2.75*oshelld/7;  //TODO: Check
 oshellOffsetz =  -oactuald/2 + wd/2 + mz/2 - bz + 2*c;
-odiskd = oshelld + w/2;
+odiskd = by;
 odiskh = w/4;
 opillard = oshelld;
 opillarh = oshellOffsetz - oactuald/2 + c;
@@ -93,6 +97,8 @@ module Breadboard() {
     cube([bbx, bby, bbz], center = true);
     translate([w/4, 0, (bbtunnelz/2 - bbz/2)])
         cube([bbtunnelx, bbtunnely, bbtunnelz], center = true);
+    translate([0, -(bbsnapy - bby)/2, (-bbz/2 + bbsnapz/2)])
+        cube([bbsnapx, bbsnapy, bbsnapz], center = true);
 }
 
 module Battery() {
@@ -132,9 +138,9 @@ module OrbShell() {
 
 module NegativeOrbShell() {
     translate([0, 0, (-odiskh/2 + oshellOffsetz)])
-        cylinder(h = odiskh, r = odiskd/2, center = true);
+        cylinder(h = (odiskh + t), r = (odiskd/2 + t), center = true);
     translate([0, 0, (-oshelld/2 + oshellOffsetz)])
-        cylinder(h = oshelld, r = opillard/2, center = true);
+        cylinder(h = oshelld, r = ((odiskd - w/2)/2 + t), center = true);
 }
 
 module Breadclip() {
@@ -151,6 +157,8 @@ module Breadclip() {
         cube([(ax-w), (bcy + c), (bcz + c)], center = true);
         translate([(mx/2 - mz/2), 0, 0])
             cube([(bcx + c), by, (bcz + c)], center = true);
+        translate([(bcx/2 - bbx/4 + mx/2 - mz/2), 0, (bcz/2 - w/4)])
+            cube([(bbx/2 + c), (bcy + c), (w/2 + c)], center = true);
     }
     }
 }
@@ -169,8 +177,6 @@ module Axel() {
         rotate([180, 0, 0])
         Motor();
     }
-    
-
 }
 
 module Shell() {
@@ -201,4 +207,4 @@ module NotPrinted() {
 }
 
 Shell();
-%NotPrinted();
+*NotPrinted();

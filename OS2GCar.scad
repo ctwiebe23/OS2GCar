@@ -1,5 +1,5 @@
 $fa = 1;
-$fs = 0.07;
+$fs = 0.01;
 
 //clipping, tolerance, wall
 c = 0.001;

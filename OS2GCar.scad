@@ -1,5 +1,5 @@
 $fa = 1;
-$fs = 0.01;
+$fs = 0.1;  //TODO: change for render
 
 //clipping, tolerance, wall
 c = 0.001;
@@ -50,7 +50,7 @@ wd = 2.380;
 
 //ORB HOUSING
 //actual orb
-oactuald = 0.4;  //TODO: Measure
+oactuald = 0.5;  //TODO: Measure
 //negative orb
 otolerance = 0.02;
 od = oactuald + otolerance;
@@ -206,5 +206,9 @@ module NotPrinted() {
         Wheel();
 }
 
-Shell();
+*Shell();
 *NotPrinted();
+rotate([180, 0, 0])
+    OrbShell();
+rotate([180, 0, 0])
+    %NegativeOrbShell();

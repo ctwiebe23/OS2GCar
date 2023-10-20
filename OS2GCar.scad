@@ -1,5 +1,5 @@
 $fa = 1;
-$fs = 0.1;  //TODO: change for render
+$fs = 0.01;
 
 //clipping, tolerance, wall
 c = 0.001;
@@ -50,13 +50,13 @@ wd = 2.380;
 
 //ORB HOUSING
 //actual orb
-oactuald = 0.5;  //TODO: Measure
+oactuald = 0.5;
 //negative orb
 otolerance = 0.02;
 od = oactuald + otolerance;
 //housing
 oshelld = od + w/2;
-oshellOpeningz = 2.75*oshelld/7;  //TODO: Check
+oshellOpeningz = 2.6*oshelld/7;
 oshellOffsetz =  -oactuald/2 + wd/2 + mz/2 - bz + 2*c;
 odiskd = by;
 odiskh = w/4;
@@ -116,8 +116,12 @@ module OrbFin() {
         cube([ofinx, ofiny, ofinz], center = true);
 }
 
+module Orb() {
+    sphere(d = oactuald);
+}
+
 module OrbShell() {
-    %sphere(d = oactuald);
+    %Orb();
     translate([0, 0, (-od/2 + oactuald/2)])
     difference() {
         sphere(d = oshelld);
@@ -206,9 +210,10 @@ module NotPrinted() {
         Wheel();
 }
 
-*Shell();
-*NotPrinted();
+Shell();
+%NotPrinted();
 rotate([180, 0, 0])
-    OrbShell();
+    *OrbShell();
 rotate([180, 0, 0])
-    %NegativeOrbShell();
+    *NegativeOrbShell();
+*Orb();

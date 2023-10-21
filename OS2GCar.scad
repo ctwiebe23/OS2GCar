@@ -17,10 +17,13 @@ mfinOffset = 0.665;
 //wheel mount
 mmounty = 0.171 + t;
 mmountd = mz;
-// motor wire tunnel
+//motor wire tunnel
 mtunnelx = mx + 3;
 mtunnely = 0.2;
 mtunnelOffset = 0.1;
+//pop hole
+mholed = mx - w/2;
+mholez = 3;
 
 //BREADBOARD
 bbx = 3.313 + t;
@@ -33,15 +36,15 @@ bbtunnelz = bbz*2;
 //expansion snaps
 bbsnapx = bbx;
 bbsnapy = bby + 0.063;
-bbsnapz = 0.191 + t;
+bbsnapz = 0.241 + t;
 
 //BATTERY
-bx = 3.790 + t;
+bx = 3.829 + t;
 by = 0.979 + t;
-bz = 0.779 + t;
+bz = 0.881 + t;
 //cable tunnel
 btunnelx = bx + 1;
-btunnely = 0.6;
+btunnely = 0.7;
 btunnelz = btunnely + (bz - btunnely)/2;
 
 //WHEEL
@@ -50,7 +53,7 @@ wd = 2.380;
 
 //ORB HOUSING
 //actual orb
-oactuald = 0.5;
+oactuald = 0.45;
 //negative orb
 otolerance = 0.02;
 od = oactuald + otolerance;
@@ -91,6 +94,7 @@ module Motor() {
         cylinder(h = mmounty, r = mmountd/2, center = true);
     translate([(mtunnelx/2 - mx/2), -(-my/2 + mtunnely/2 + mtunnelOffset), 0])
         cube([mtunnelx, mtunnely, mz], center = true);
+    cylinder(h = mholez, r = mholed/2, center = true);
 }
 
 module Breadboard() {

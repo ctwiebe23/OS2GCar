@@ -1,5 +1,7 @@
+use <CarModules.scad>
+
 $fa = 1;
-$fs = 0.01;
+$fs = 0.1;
 
 //clipping, tolerance, wall
 c = 0.001;
@@ -156,7 +158,7 @@ module Breadclip() {
     translate([(mx/2 - mz/2), 0, 0])
     difference() {
         translate([0, 0, -mz/2])
-            cube([bcx, bcy, bcz], center = true);
+            fcube([bcx, bcy, bcz], .1, z = 1);
         translate([(w/4 + c), 0, 0])
             Breadboard();
     }
@@ -175,7 +177,7 @@ module Axel() {
     translate([(-mx/2 + mmountd/2), 0, (-az/2 + mz/2)])
     difference() {
     union() {
-        cube([ax, ay, az], center = true);
+        fcube([ax, ay, az], 0.1, z = 1);
         translate([0, 0, (bcz/2 - w/4 - c)])
             color("red") Breadclip();
     }
@@ -192,7 +194,7 @@ module Shell() {
     union() {
         Axel();
         translate([0, 0, (-sz/2 + mz/2)])
-            cube([sx, sy, sz], center = true);
+            fcube([sx, sy, sz], 0.1, z = 0);
     }
     translate([0, 0, (-bz/2 + mz/2 + c)])
         Battery();

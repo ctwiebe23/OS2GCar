@@ -1,7 +1,7 @@
 use <CarModules.scad>
 
 $fa = 1;
-$fs = 0.1;
+$fs = 0.03;
 
 //clipping, tolerance, wall
 c = 0.001;
